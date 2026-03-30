@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDX — Tienda de Tecnología de Nueva Generación</title>
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dark:       #000814;
+    --dark2:      #050d1f;
+    --dark3:      #0a1628;
+    --gray:       #d3d3d3;
+    --gray-mid:   #8a8a8a;
+    --gray-dim:   #3a3a3a;
+    --green:      #91c612;
+    --green-soft: #e2e8c5;
+    --green-glow: rgba(145,198,18,0.18);
+    --green-glow2:rgba(145,198,18,0.08);
+    --white:      #ffffff;
+    --card-bg:    #0d1a2e;
+    --card-border:rgba(145,198,18,0.12);
+    --font:       'Oxanium', sans-serif;
+    --radius:     12px;
+    --radius-lg:  20px;
+    --ease:       cubic-bezier(0.4,0,0.2,1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font);
+    background: var(--dark);
+    color: var(--gray);
+    font-weight: 500;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--dark); }
+  ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 3px; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    background: rgba(0,8,20,0.88);
+    backdrop-filter: blur(22px);
+    border-bottom: 1px solid rgba(145,198,18,0.1);
+    height: 68px;
+    display: flex; align-items: center;
+    padding: 0 5%;
+    gap: 2rem;
+  }
+  .nav-logo svg { height: 34px; width: auto; display: block; }
+
+  .nav-links {
+    display: flex; align-items: center; gap: 1.8rem;
+    list-style: none; flex: 1;
+  }
+  .nav-links a {
+    color: var(--gray); text-decoration: none;
+    font-size: 0.8rem; letter-spacing: 0.07em;
+    text-transform: uppercase; font-weight: 600;
+    transition: color .25s var(--ease);
+    position: relative; white-space: nowrap;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 2px; background: var(--green);
+    transition: width .25s var(--ease);
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-links .badge-oferta {
+    background: var(--green); color: var(--dark);
+    padding: 1px 7px; border-radius: 4px;
+    font-size: 0.66rem; font-weight: 800;
+    letter-spacing: 0.06em; margin-left: 5px;
+  }
+
+  .nav-right { display: flex; align-items: center; gap: 1rem; }
+  .nav-search {
+    display: flex; align-items: center; gap: 7px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(145,198,18,0.14);
+    border-radius: 8px; padding: 6px 13px;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .nav-search:focus-within {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px var(--green-glow2);
+  }
+  .nav-search input {
+    background: none; border: none; outline: none;
+    color: var(--white); font-family: var(--font);
+    font-size: 0.8rem; width: 160px;
+  }
+  .nav-search input::placeholder { color: var(--gray-mid); }
+  .nav-search svg { color: var(--gray-mid); flex-shrink: 0; }
+
+  .nav-icon {
+    background: none; border: none; cursor: pointer;
+    color: var(--gray); width: 38px; height: 38px;
+    border-radius: 8px; display: flex; align-items: center;
+    justify-content: center; transition: .2s; position: relative;
+  }
+  .nav-icon:hover { color: var(--white); background: rgba(145,198,18,0.1); }
+  .nav-icon .qty {
+    position: absolute; top: 4px; right: 4px;
+    background: var(--green); color: var(--dark);
+    width: 16px; height: 16px; border-radius: 50%;
+    font-size: 0.6rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; gap: 3rem;
+    padding: 110px 5% 80px;
+    position: relative; overflow: hidden;
+    background:
+      radial-gradient(ellipse 80% 60% at 72% 50%, rgba(145,198,18,0.065) 0%, transparent 68%),
+      radial-gradient(ellipse 50% 80% at 18% 80%, rgba(0,80,220,0.04) 0%, transparent 60%),
+      linear-gradient(180deg, var(--dark) 0%, #010d22 100%);
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(145,198,18,0.065) 1px, transparent 1px);
+    background-size: 44px 44px;
+    pointer-events: none;
+  }
+
+  .hero-etiqueta {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(145,198,18,0.1);
+    border: 1px solid rgba(145,198,18,0.28);
+    border-radius: 100px; padding: 5px 15px;
+    font-size: 0.7rem; letter-spacing: 0.13em;
+    text-transform: uppercase; color: var(--green);
+    font-weight: 700; margin-bottom: 1.4rem;
+    animation: fadeUp .7s ease both;
+  }
+  .hero-etiqueta::before {
+    content: ''; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green); animation: pulso 2s ease-in-out infinite;
+  }
+
+  .hero h1 {
+    font-weight: 800;
+    font-size: clamp(2.3rem, 4.8vw, 4rem);
+    line-height: 1.07; color: var(--white);
+    letter-spacing: -0.01em; margin-bottom: 1.4rem;
+    animation: fadeUp .7s .1s ease both;
+  }
+  .hero h1 .acento { color: var(--green); }
+  .hero h1 .bloque { display: block; }
+
+  .hero-sub {
+    font-size: .97rem; color: var(--gray-mid);
+    max-width: 490px; line-height: 1.75;
+    margin-bottom: 2.4rem;
+    animation: fadeUp .7s .2s ease both;
+  }
+
+  .hero-ctas {
+    display: flex; align-items: center; gap: .9rem; flex-wrap: wrap;
+    animation: fadeUp .7s .3s ease both;
+  }
+
+  .btn-primario {
+    background: var(--green); color: var(--dark);
+    border: none; border-radius: 8px;
+    padding: 13px 26px; font-family: var(--font);
+    font-weight: 700; font-size: .86rem;
+    letter-spacing: .06em; text-transform: uppercase;
+    cursor: pointer; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: .25s; box-shadow: 0 0 24px rgba(145,198,18,.3);
+  }
+  .btn-primario:hover {
+    background: #a3d914;
+    box-shadow: 0 0 40px rgba(145,198,18,.55);
+    transform: translateY(-2px);
+  }
+  .btn-contorno {
+    background: transparent; color: var(--gray);
+    border: 1px solid rgba(211,211,211,.22);
+    border-radius: 8px;
+    padding: 13px 26px; font-family: var(--font);
+    font-weight: 600; font-size: .86rem;
+    letter-spacing: .06em; text-transform: uppercase;
+    cursor: pointer; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: .25s;
+  }
+  .btn-contorno:hover {
+    border-color: var(--green); color: var(--green);
+    background: var(--green-glow2); transform: translateY(-2px);
+  }
+
+  .hero-stats {
+    display: flex; gap: 2.5rem; margin-top: 2.8rem;
+    animation: fadeUp .7s .4s ease both;
+  }
+  .hero-stat strong {
+    display: block; font-size: 1.75rem;
+    font-weight: 800; color: var(--white); line-height: 1;
+  }
+  .hero-stat strong span { color: var(--green); }
+  .hero-stat small {
+    font-size: .7rem; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--gray-mid);
+  }
+
+  /* Hero visual */
+  .hero-visual {
+    position: relative; display: flex;
+    align-items: center; justify-content: center;
+    animation: fadeIn 1.1s .2s ease both;
+  }
+  .hero-escenario { position: relative; width: 100%; max-width: 560px; aspect-ratio: 1; }
+  .hero-halo {
+    position: absolute; inset: 0; border-radius: 50%;
+    background: radial-gradient(circle, rgba(145,198,18,0.11) 0%, transparent 65%);
+    animation: girar 20s linear infinite;
+  }
+  .hero-laptop { position: relative; z-index: 2; width: 86%; margin: 0 auto;
+    filter: drop-shadow(0 30px 60px rgba(0,0,0,.85)) drop-shadow(0 0 40px rgba(145,198,18,.13)); }
+
+  .burbuja {
+    position: absolute;
+    background: rgba(13,26,46,.96);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(14px);
+    border-radius: 12px; padding: 9px 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .burbuja-1 { bottom: 17%; right: -4%; animation: flotar 4s ease-in-out infinite; }
+  .burbuja-2 { top: 22%; left: -7%; animation: flotar 4s 1.5s ease-in-out infinite; }
+  .burbuja-3 { bottom: 40%; left: -3%; animation: flotar 4s .8s ease-in-out infinite; }
+  .burbuja-icono {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: var(--green-glow);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .burbuja-icono svg { color: var(--green); }
+  .burbuja-texto strong { display: block; font-size: .8rem; color: var(--white); font-weight: 700; }
+  .burbuja-texto span { font-size: .68rem; color: var(--gray-mid); }
+
+  /* ─── TICKER ─── */
+  .ticker {
+    background: var(--green); color: var(--dark);
+    padding: 10px 0; overflow: hidden;
+    font-size: .76rem; font-weight: 800;
+    letter-spacing: .1em; text-transform: uppercase;
+  }
+  .ticker-pista {
+    display: flex; width: max-content;
+    animation: cinta 32s linear infinite;
+  }
+  .ticker-item { white-space: nowrap; padding: 0 2.5rem; }
+  .ticker-punto { color: rgba(0,8,20,.35); }
+
+  /* ─── SECCIONES COMUNES ─── */
+  section { padding: 88px 5%; }
+  .encabezado { text-align: center; margin-bottom: 3.5rem; }
+  .sec-tag {
+    display: inline-block; font-size: .7rem;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--green); font-weight: 700; margin-bottom: .7rem;
+  }
+  .sec-titulo {
+    font-size: clamp(1.75rem, 3vw, 2.55rem);
+    font-weight: 800; color: var(--white);
+    letter-spacing: -.01em; line-height: 1.14;
+  }
+  .sec-sub {
+    margin-top: .7rem; font-size: .88rem; color: var(--gray-mid);
+    max-width: 510px; margin-left: auto; margin-right: auto;
+  }
+
+  /* ─── CATEGORÍAS ─── */
+  .categorias { background: var(--dark2); }
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 1rem;
+  }
+  .cat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 1.5rem 1rem; text-align: center;
+    cursor: pointer; text-decoration: none;
+    display: flex; flex-direction: column;
+    align-items: center; gap: .8rem;
+    position: relative; overflow: hidden;
+    transition: transform .28s var(--ease), border-color .28s, box-shadow .28s;
+  }
+  .cat-card::before {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0; height: 2px;
+    background: var(--green); transform: scaleX(0);
+    transition: transform .28s var(--ease);
+  }
+  .cat-card:hover { border-color: rgba(145,198,18,.35); transform: translateY(-5px); box-shadow: 0 12px 40px rgba(0,0,0,.4), 0 0 20px var(--green-glow2); }
+  .cat-card:hover::before { transform: scaleX(1); }
+  .cat-card:hover .cat-icono { background: var(--green); }
+  .cat-card:hover .cat-icono svg { color: var(--dark); }
+  .cat-icono {
+    width: 50px; height: 50px; border-radius: 11px;
+    background: rgba(145,198,18,.1);
+    display: flex; align-items: center; justify-content: center;
+    transition: background .28s;
+  }
+  .cat-icono svg { color: var(--green); transition: color .28s; }
+  .cat-nombre { font-size: .8rem; font-weight: 700; color: var(--white); letter-spacing: .03em; }
+  .cat-total { font-size: .68rem; color: var(--gray-mid); }
+
+  /* ─── PRODUCTOS ─── */
+  .productos { background: var(--dark); }
+  .prod-tabs {
+    display: flex; gap: .5rem; justify-content: center;
+    margin-bottom: 2.5rem; flex-wrap: wrap;
+  }
+  .tab {
+    background: transparent; border: 1px solid rgba(211,211,211,.12);
+    color: var(--gray-mid); border-radius: 100px;
+    padding: 7px 17px; font-family: var(--font);
+    font-size: .76rem; letter-spacing: .06em;
+    text-transform: uppercase; cursor: pointer;
+    font-weight: 600; transition: .2s;
+  }
+  .tab:hover, .tab.activo {
+    background: var(--green); color: var(--dark); border-color: var(--green);
+  }
+  .prod-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(258px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .prod-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg); overflow: hidden;
+    cursor: pointer; display: flex; flex-direction: column;
+    position: relative;
+    transition: transform .3s var(--ease), border-color .3s, box-shadow .3s;
+  }
+  .prod-card:hover { border-color: rgba(145,198,18,.35); transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,.5), 0 0 30px var(--green-glow2); }
+
+  .prod-badge {
+    position: absolute; top: 13px; left: 13px; z-index: 2;
+    padding: 3px 9px; border-radius: 5px;
+    font-size: .66rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  }
+  .badge-nuevo { background: var(--green); color: var(--dark); }
+  .badge-top { background: #ff4a4a; color: #fff; }
+  .badge-oferta { background: #f5a623; color: var(--dark); }
+  .badge-pick { background: rgba(145,198,18,.15); color: var(--green); border: 1px solid rgba(145,198,18,.3); }
+
+  .prod-deseo {
+    position: absolute; top: 11px; right: 11px; z-index: 2;
+    width: 32px; height: 32px; border-radius: 8px;
+    background: rgba(0,8,20,.7); border: 1px solid rgba(211,211,211,.1);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--gray-mid); transition: .2s;
+  }
+  .prod-deseo:hover { color: #ff4a4a; border-color: #ff4a4a; }
+
+  .prod-img {
+    padding: 1.4rem; background: rgba(5,13,31,.5);
+    display: flex; align-items: center; justify-content: center;
+    min-height: 178px; position: relative; overflow: hidden;
+  }
+  .prod-img::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 55px;
+    background: linear-gradient(transparent, var(--card-bg));
+  }
+
+  .prod-info { padding: 1.15rem 1.35rem 1.35rem; flex: 1; display: flex; flex-direction: column; }
+  .prod-marca { font-size: .66rem; color: var(--green); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .3rem; }
+  .prod-nombre { font-size: .9rem; font-weight: 700; color: var(--white); line-height: 1.35; margin-bottom: .45rem; }
+  .prod-specs { font-size: .7rem; color: var(--gray-mid); line-height: 1.55; margin-bottom: .75rem; flex: 1; }
+  .prod-rating { display: flex; align-items: center; gap: 5px; margin-bottom: .85rem; }
+  .estrellas { color: var(--green); font-size: .73rem; letter-spacing: 1px; }
+  .num-resenas { font-size: .68rem; color: var(--gray-mid); }
+  .prod-pie { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+  .prod-precio .actual { font-size: 1.12rem; font-weight: 800; color: var(--white); }
+  .prod-precio .anterior { font-size: .76rem; color: var(--gray-mid); text-decoration: line-through; margin-left: 4px; }
+
+  .btn-carrito {
+    background: var(--green); color: var(--dark);
+    border: none; border-radius: 8px;
+    padding: 9px 15px; font-family: var(--font);
+    font-weight: 700; font-size: .76rem;
+    cursor: pointer; display: flex; align-items: center; gap: 6px;
+    transition: .2s; letter-spacing: .04em;
+  }
+  .btn-carrito:hover { background: #a3d914; box-shadow: 0 0 20px rgba(145,198,18,.4); }
+
+  /* ─── POR QUÉ SDX ─── */
+  .por-que { background: linear-gradient(180deg, var(--dark3), var(--dark2)); position: relative; overflow: hidden; }
+  .por-que::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+  }
+  .pq-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 1.5rem; }
+  .pq-card {
+    padding: 1.75rem 1.45rem; border-radius: var(--radius);
+    border: 1px solid rgba(145,198,18,.08);
+    background: rgba(5,13,31,.4); position: relative; overflow: hidden;
+    transition: border-color .28s, transform .28s;
+  }
+  .pq-card::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--green), rgba(145,198,18,.3));
+    transform: scaleX(0); transform-origin: left; transition: transform .28s var(--ease);
+  }
+  .pq-card:hover { border-color: rgba(145,198,18,.22); transform: translateY(-4px); }
+  .pq-card:hover::after { transform: scaleX(1); }
+  .pq-icono {
+    width: 46px; height: 46px; border-radius: 11px;
+    background: var(--green-glow);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;
+  }
+  .pq-icono svg { color: var(--green); }
+  .pq-card h3 { font-size: .93rem; font-weight: 700; color: var(--white); margin-bottom: .45rem; }
+  .pq-card p { font-size: .78rem; color: var(--gray-mid); line-height: 1.65; }
+
+  /* ─── BANNER PROMO ─── */
+  .banner-promo { padding: 0 5%; background: var(--dark); }
+  .banner-inner {
+    background: linear-gradient(135deg, #0a1a0a 0%, #061210 42%, #091a20 100%);
+    border: 1px solid rgba(145,198,18,.22);
+    border-radius: 24px; padding: 4rem 5%;
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: center; gap: 2rem;
+    position: relative; overflow: hidden;
+  }
+  .banner-inner::before {
+    content: ''; position: absolute; top: -50%; left: -10%;
+    width: 500px; height: 500px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(145,198,18,.08) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .banner-inner::after {
+    content: 'SDX';
+    position: absolute; right: 4%; bottom: -22%;
+    font-size: 14rem; font-weight: 800;
+    color: rgba(145,198,18,.025); letter-spacing: -.05em;
+    pointer-events: none; user-select: none;
+  }
+  .banner-tag {
+    display: inline-block; background: var(--green); color: var(--dark);
+    padding: 4px 12px; border-radius: 4px;
+    font-size: .68rem; font-weight: 800;
+    letter-spacing: .1em; text-transform: uppercase; margin-bottom: .9rem;
+  }
+  .banner-titulo {
+    font-size: clamp(1.75rem, 3.3vw, 2.9rem);
+    font-weight: 800; color: var(--white); line-height: 1.1; margin-bottom: .7rem;
+  }
+  .banner-titulo em { color: var(--green); font-style: normal; }
+  .banner-sub { font-size: .88rem; color: var(--gray-mid); max-width: 440px; margin-bottom: 1.75rem; }
+  .banner-ctas { display: flex; gap: .9rem; align-items: center; flex-wrap: wrap; }
+
+  .cuenta-regresiva { display: flex; gap: .75rem; align-items: center; flex-shrink: 0; }
+  .cr-bloque {
+    background: rgba(5,13,31,.85); border: 1px solid rgba(145,198,18,.2);
+    border-radius: 10px; padding: 11px 15px; text-align: center; min-width: 68px;
+  }
+  .cr-bloque strong { display: block; font-size: 1.75rem; font-weight: 800; color: var(--white); line-height: 1; }
+  .cr-bloque small { font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: var(--green); font-weight: 700; }
+  .cr-sep { font-size: 1.75rem; font-weight: 800; color: var(--green); line-height: 1; }
+
+  /* ─── TESTIMONIOS ─── */
+  .testimonios { background: var(--dark2); }
+  .sellos {
+    display: flex; justify-content: center; gap: 1.8rem;
+    flex-wrap: wrap; margin-bottom: 3.5rem;
+  }
+  .sello {
+    display: flex; align-items: center; gap: 9px;
+    padding: 9px 18px; border-radius: 100px;
+    border: 1px solid rgba(145,198,18,.14);
+    font-size: .76rem; font-weight: 600; color: var(--gray);
+  }
+  .sello svg { color: var(--green); }
+  .resenas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(295px, 1fr)); gap: 1.5rem; }
+  .resena-card {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg); padding: 1.55rem;
+    transition: border-color .28s, transform .28s;
+  }
+  .resena-card:hover { border-color: rgba(145,198,18,.25); transform: translateY(-3px); }
+  .resena-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: .9rem; }
+  .reseniador { display: flex; align-items: center; gap: 11px; }
+  .avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: .88rem; color: var(--dark); flex-shrink: 0;
+  }
+  .res-nombre { font-size: .83rem; font-weight: 700; color: var(--white); }
+  .res-cargo { font-size: .68rem; color: var(--gray-mid); }
+  .res-texto { font-size: .8rem; color: var(--gray); line-height: 1.72; }
+  .res-producto { margin-top: .9rem; font-size: .68rem; color: var(--green); font-weight: 600; }
+
+  /* ─── NEWSLETTER ─── */
+  .newsletter { background: var(--dark3); position: relative; overflow: hidden; }
+  .newsletter::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(145,198,18,.045) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .nl-inner { position: relative; max-width: 600px; margin: 0 auto; text-align: center; }
+  .nl-titulo { font-size: clamp(1.55rem, 3vw, 2.15rem); font-weight: 800; color: var(--white); margin-bottom: .7rem; }
+  .nl-sub { font-size: .88rem; color: var(--gray-mid); margin-bottom: 2rem; }
+  .nl-form { display: flex; gap: .75rem; flex-wrap: wrap; justify-content: center; }
+  .nl-input {
+    flex: 1; min-width: 255px;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(145,198,18,.2);
+    border-radius: 8px; padding: 12px 17px;
+    color: var(--white); font-family: var(--font); font-size: .86rem; outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .nl-input::placeholder { color: var(--gray-mid); }
+  .nl-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-glow2); background: rgba(145,198,18,.04); }
+  .nl-nota { margin-top: .9rem; font-size: .7rem; color: var(--gray-mid); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: #000510; border-top: 1px solid rgba(145,198,18,.08);
+    padding: 5rem 5% 2rem;
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: 1.8fr 1fr 1fr 1fr 1fr;
+    gap: 2.5rem; margin-bottom: 3.5rem;
+  }
+  .footer-marca .logo-wrap svg { height: 38px; width: auto; display: block; margin-bottom: 1rem; }
+  .footer-marca p { font-size: .8rem; color: var(--gray-mid); line-height: 1.72; max-width: 235px; margin-bottom: 1.5rem; }
+  .redes { display: flex; gap: .7rem; }
+  .red {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: rgba(145,198,18,.08); border: 1px solid rgba(145,198,18,.15);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gray-mid); text-decoration: none; transition: .2s;
+  }
+  .red:hover { background: var(--green); color: var(--dark); border-color: var(--green); }
+  .footer-col h4 {
+    font-size: .76rem; font-weight: 700; color: var(--white);
+    letter-spacing: .1em; text-transform: uppercase; margin-bottom: 1.15rem;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .55rem; }
+  .footer-col ul a { font-size: .8rem; color: var(--gray-mid); text-decoration: none; transition: .2s; display: inline-block; }
+  .footer-col ul a:hover { color: var(--green); padding-left: 4px; }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(145,198,18,.08); padding-top: 1.7rem;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-bottom p { font-size: .73rem; color: var(--gray-mid); }
+  .pagos { display: flex; gap: .55rem; align-items: center; }
+  .pago {
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 5px; padding: 4px 10px;
+    font-size: .66rem; font-weight: 700; color: var(--gray); letter-spacing: .06em;
+  }
+
+  /* ─── ANIMACIONES ─── */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(26px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  @keyframes flotar { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-9px);} }
+  @keyframes pulso { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.45;transform:scale(.8);} }
+  @keyframes cinta { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+  @keyframes girar { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1060px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .banner-inner { grid-template-columns: 1fr; }
+    .cuenta-regresiva { justify-content: flex-start; }
+  }
+  @media (max-width: 780px) {
+    .hero { grid-template-columns: 1fr; padding-top: 96px; }
+    .hero-visual { display: none; }
+    .nav-links { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer-marca { grid-column: 1 / -1; }
+  }
+  @media (max-width: 480px) {
+    section { padding: 58px 5%; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .cuenta-regresiva { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg viewBox="0 0 302.04 141.39" xmlns="http://www.w3.org/2000/svg" aria-label="SDX">
+      <defs>
+        <style>.cls-1{fill:#91c612}.cls-2{fill:#efefef}</style>
+      </defs>
+      <g>
+        <path class="cls-2" d="M154.69,69.11c0,1.86-.24,3.54-.71,5.02-.47,1.49-1.09,2.8-1.87,3.94-.77,1.14-1.68,2.1-2.72,2.9-1.04.8-2.12,1.45-3.23,1.96-1.11.51-2.24.88-3.39,1.12-1.15.24-2.23.36-3.25.36h-36.39v-9.43h36.39c1.81,0,3.22-.53,4.23-1.6,1-1.06,1.51-2.49,1.51-4.28,0-.87-.13-1.67-.4-2.39-.27-.73-.65-1.35-1.14-1.89-.5-.53-1.1-.94-1.81-1.23-.71-.29-1.51-.44-2.38-.44h-21.69c-1.52,0-3.17-.27-4.93-.82-1.77-.54-3.4-1.42-4.92-2.63-1.51-1.21-2.77-2.79-3.77-4.75-1-1.96-1.51-4.35-1.51-7.18s.5-5.22,1.51-7.16c1-1.95,2.26-3.53,3.77-4.75,1.51-1.22,3.15-2.1,4.92-2.65,1.77-.54,3.41-.82,4.93-.82h32.11v9.43h-32.11c-1.79,0-3.19.54-4.19,1.63-1,1.09-1.51,2.53-1.51,4.32s.5,3.25,1.51,4.3,2.4,1.58,4.19,1.58h21.77c1.02.02,2.09.16,3.23.42,1.14.25,2.27.65,3.39,1.18,1.12.53,2.19,1.2,3.21,2.01,1.02.81,1.92,1.78,2.7,2.92.79,1.14,1.41,2.44,1.87,3.92.46,1.48.69,3.14.69,5.01Z"/>
+        <path class="cls-2" d="M214.44,62.65c0,3.17-.55,6.08-1.65,8.74-1.1,2.66-2.62,4.95-4.55,6.87-1.94,1.92-4.23,3.43-6.89,4.52-2.66,1.09-5.55,1.63-8.67,1.63h-25.47c-.68,0-1.31-.12-1.89-.36-.58-.24-1.08-.57-1.51-1-.42-.42-.76-.92-1-1.51-.24-.58-.36-1.21-.36-1.89v-42.52c0-.65.12-1.27.36-1.85.24-.58.57-1.09,1-1.52.42-.44.93-.77,1.51-1.02.58-.24,1.21-.36,1.89-.36h25.47c3.12,0,6.01.54,8.67,1.63,2.66,1.09,4.96,2.59,6.89,4.52,1.93,1.92,3.45,4.22,4.55,6.89,1.1,2.67,1.65,5.58,1.65,8.73v8.49ZM205.01,54.16c0-1.84-.3-3.52-.89-5.04s-1.43-2.82-2.52-3.9c-1.09-1.08-2.39-1.91-3.9-2.5-1.51-.59-3.19-.89-5.02-.89h-20.79v33.16h20.79c1.84,0,3.51-.3,5.02-.89,1.51-.59,2.81-1.43,3.9-2.5,1.09-1.08,1.93-2.37,2.52-3.88.59-1.51.89-3.2.89-5.06v-8.49Z"/>
+        <path class="cls-2" d="M246.01,50.97l15.89-18.57h12.88l-22.38,26.08,22.24,25.94h-12.81l-15.82-18.43-15.74,18.43h-12.84l22.2-25.94-22.27-26.08h12.77l15.89,18.57Z"/>
+      </g>
+      <g>
+        <path class="cls-2" d="M103.69,113.54c.05-.8.1-1.99.1-3.03v-14.18h2.11v7.37h.05c.75-1.31,2.11-2.16,4-2.16,2.91,0,4.97,2.42,4.95,5.99,0,4.19-2.64,6.28-5.26,6.28-1.7,0-3.06-.65-3.93-2.21h-.07l-.1,1.94h-1.84ZM105.9,108.83c0,.27.05.53.1.78.41,1.48,1.65,2.5,3.2,2.5,2.23,0,3.56-1.82,3.56-4.51,0-2.35-1.21-4.36-3.49-4.36-1.45,0-2.81.99-3.25,2.62-.05.24-.12.53-.12.87v2.11Z"/>
+        <path class="cls-2" d="M118.19,101.8l2.57,6.93c.27.78.56,1.7.75,2.4h.05c.22-.7.46-1.6.75-2.45l2.33-6.89h2.25l-3.2,8.37c-1.53,4.02-2.57,6.09-4.02,7.35-1.04.92-2.09,1.28-2.62,1.38l-.53-1.79c.53-.17,1.24-.51,1.87-1.04.58-.46,1.31-1.29,1.79-2.38.1-.22.17-.39.17-.51s-.05-.29-.15-.56l-4.34-10.81h2.33Z"/>
+        <path class="cls-2" d="M133.69,111.36c.63.41,1.75.85,2.81.85,1.55,0,2.28-.78,2.28-1.75,0-1.02-.61-1.58-2.18-2.16-2.11-.75-3.1-1.92-3.1-3.32,0-1.89,1.53-3.44,4.05-3.44,1.19,0,2.23.34,2.89.73l-.53,1.55c-.46-.29-1.31-.68-2.4-.68-1.26,0-1.96.73-1.96,1.6,0,.97.7,1.41,2.23,1.99,2.04.78,3.08,1.79,3.08,3.54,0,2.06-1.6,3.52-4.39,3.52-1.29,0-2.47-.32-3.3-.8l.53-1.62Z"/>
+        <path class="cls-2" d="M153.4,110.34c0,1.21.02,2.28.1,3.2h-1.89l-.12-1.92h-.05c-.56.95-1.79,2.18-3.88,2.18-1.84,0-4.05-1.02-4.05-5.14v-6.86h2.13v6.5c0,2.23.68,3.73,2.62,3.73,1.43,0,2.42-.99,2.81-1.94.12-.32.19-.7.19-1.09v-7.2h2.13v8.53Z"/>
+        <path class="cls-2" d="M156.94,105.63c0-1.5-.05-2.72-.1-3.83h1.92l.1,2.01h.05c.87-1.43,2.25-2.28,4.17-2.28,2.84,0,4.97,2.4,4.97,5.96,0,4.22-2.57,6.3-5.33,6.3-1.55,0-2.91-.68-3.61-1.84h-.05v6.38h-2.11v-12.71ZM159.05,108.76c0,.31.05.61.1.87.39,1.48,1.67,2.5,3.2,2.5,2.25,0,3.56-1.84,3.56-4.53,0-2.35-1.24-4.36-3.49-4.36-1.45,0-2.81,1.04-3.22,2.64-.07.27-.15.58-.15.87v2.01Z"/>
+        <path class="cls-2" d="M170.74,105.63c0-1.5-.05-2.72-.1-3.83h1.92l.1,2.01h.05c.87-1.43,2.25-2.28,4.17-2.28,2.84,0,4.97,2.4,4.97,5.96,0,4.22-2.57,6.3-5.33,6.3-1.55,0-2.91-.68-3.61-1.84h-.05v6.38h-2.11v-12.71ZM172.85,108.76c0,.31.05.61.1.87.39,1.48,1.67,2.5,3.2,2.5,2.25,0,3.56-1.84,3.56-4.53,0-2.35-1.24-4.36-3.49-4.36-1.45,0-2.81,1.04-3.22,2.64-.07.27-.15.58-.15.87v2.01Z"/>
+        <path class="cls-2" d="M195.16,107.57c0,4.34-3.01,6.23-5.84,6.23-3.18,0-5.62-2.33-5.62-6.04,0-3.93,2.57-6.23,5.82-6.23s5.65,2.45,5.65,6.04ZM185.85,107.7c0,2.57,1.48,4.51,3.56,4.51s3.56-1.92,3.56-4.56c0-1.99-.99-4.51-3.52-4.51s-3.61,2.33-3.61,4.56Z"/>
+        <path class="cls-2" d="M197.85,105.46c0-1.38-.02-2.57-.1-3.66h1.87l.07,2.3h.1c.53-1.58,1.82-2.57,3.25-2.57.24,0,.41.02.61.07v2.01c-.22-.05-.44-.07-.73-.07-1.5,0-2.57,1.14-2.86,2.74-.05.29-.1.63-.1.99v6.26h-2.11v-8.07Z"/>
+        <path class="cls-2" d="M208.93,98.43v3.37h3.06v1.62h-3.06v6.33c0,1.45.41,2.28,1.6,2.28.56,0,.97-.07,1.24-.15l.1,1.6c-.41.17-1.07.29-1.89.29-.99,0-1.79-.32-2.3-.9-.61-.63-.82-1.67-.82-3.05v-6.4h-1.82v-1.62h1.82v-2.81l2.08-.56Z"/>
+        <path class="cls-2" d="M224.38,96.32v14.18c0,1.04.02,2.23.1,3.03h-1.92l-.1-2.04h-.05c-.65,1.31-2.08,2.3-4,2.3-2.84,0-5.02-2.4-5.02-5.96-.02-3.9,2.4-6.3,5.26-6.3,1.79,0,3.01.85,3.54,1.79h.05v-7.01h2.13ZM222.25,106.58c0-.27-.02-.63-.1-.9-.32-1.36-1.48-2.47-3.08-2.47-2.21,0-3.52,1.94-3.52,4.53,0,2.38,1.16,4.34,3.47,4.34,1.43,0,2.74-.95,3.13-2.55.07-.29.1-.58.1-.92v-2.04Z"/>
+        <path class="cls-2" d="M229.11,108.06c.05,2.89,1.89,4.07,4.02,4.07,1.53,0,2.45-.27,3.25-.61l.36,1.53c-.75.34-2.04.73-3.9.73-3.61,0-5.77-2.38-5.77-5.92s2.08-6.33,5.5-6.33c3.83,0,4.85,3.37,4.85,5.53,0,.44-.05.78-.07.99h-8.24ZM235.37,106.53c.02-1.36-.56-3.47-2.96-3.47-2.16,0-3.1,1.99-3.27,3.47h6.23Z"/>
+        <path class="cls-2" d="M239.78,111.36c.63.41,1.75.85,2.81.85,1.55,0,2.28-.78,2.28-1.75,0-1.02-.61-1.58-2.18-2.16-2.11-.75-3.1-1.92-3.1-3.32,0-1.89,1.53-3.44,4.05-3.44,1.19,0,2.23.34,2.89.73l-.53,1.55c-.46-.29-1.31-.68-2.4-.68-1.26,0-1.96.73-1.96,1.6,0,.97.7,1.41,2.23,1.99,2.04.78,3.08,1.79,3.08,3.54,0,2.06-1.6,3.52-4.39,3.52-1.29,0-2.47-.32-3.3-.8l.53-1.62Z"/>
+        <path class="cls-2" d="M251.78,107.19h.05c.29-.41.7-.92,1.04-1.33l3.44-4.05h2.57l-4.53,4.83,5.16,6.91h-2.59l-4.05-5.62-1.09,1.21v4.41h-2.11v-17.21h2.11v10.86Z"/>
+      </g>
+      <polygon class="cls-1" points="76.02 70.77 76.01 70.78 68.87 66.66 51.68 66.66 51.68 69.06 62.36 75.22 67.08 77.95 67.1 77.95 75.41 82.74 65.34 88.55 54.72 82.42 54.72 94.75 65.34 100.88 86.08 88.91 91.42 85.83 91.42 79.66 80.74 73.5 76.02 70.77"/>
+      <polygon class="cls-1" points="36.15 89.24 36.15 89.23 42.89 84.51 50.15 68.93 47.98 67.91 37.88 74.99 33.41 78.12 33.41 78.13 25.55 83.64 24.54 72.06 34.58 65.02 23.41 59.82 13.36 66.86 15.46 90.71 16 96.85 21.58 99.45 31.68 92.38 36.15 89.24"/>
+      <polygon class="cls-1" points="35.23 45.69 35.24 45.69 37.37 53.65 49.53 65.8 51.22 64.1 48.03 52.2 46.62 46.93 46.61 46.92 44.13 37.65 55.35 40.66 58.53 52.5 67.24 43.79 64.07 31.94 40.94 25.75 34.98 24.15 30.63 28.51 33.82 40.41 35.23 45.69"/>
+    </svg>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#">Laptops</a></li>
+    <li><a href="#">Monitores</a></li>
+    <li><a href="#">Redes</a></li>
+    <li><a href="#">Periféricos</a></li>
+    <li><a href="#">Hogar Inteligente</a></li>
+    <li><a href="#">Seguridad IT</a></li>
+    <li><a href="#"><span class="badge-oferta">SALE</span> Ofertas</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <div class="nav-search">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Buscar productos...">
+    </div>
+    <button class="nav-icon" title="Mi cuenta">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </button>
+    <button class="nav-icon" title="Carrito">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span class="qty">3</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-contenido">
+    <div class="hero-etiqueta">Tecnología de Nueva Generación</div>
+    <h1>
+      <span class="bloque">Redefine lo que</span>
+      <span class="bloque">la tecnología <span class="acento">puede hacer</span></span>
+    </h1>
+    <p class="hero-sub">Hardware premium, rendimiento de vanguardia y confiabilidad de nivel empresarial — todo en un solo lugar. SDX te equipa para liderar la era digital.</p>
+    <div class="hero-ctas">
+      <a href="#productos" class="btn-primario">
+        Comprar Ahora
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#categorias" class="btn-contorno">Explorar Categorías</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <strong>12<span>K+</span></strong>
+        <small>Productos</small>
+      </div>
+      <div class="hero-stat">
+        <strong>98<span>%</span></strong>
+        <small>Satisfacción</small>
+      </div>
+      <div class="hero-stat">
+        <strong>24<span>/7</span></strong>
+        <small>Soporte</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hero-escenario">
+      <div class="hero-halo"></div>
+      <div class="hero-laptop">
+        <svg viewBox="0 0 560 420" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+          <defs>
+            <linearGradient id="bG" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#1a2a3a"/><stop offset="100%" stop-color="#0a1520"/>
+            </linearGradient>
+            <linearGradient id="sG" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#000c1a"/><stop offset="100%" stop-color="#001030"/>
+            </linearGradient>
+            <linearGradient id="kG" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#1e2e3e"/><stop offset="100%" stop-color="#0f1e2e"/>
+            </linearGradient>
+            <radialGradient id="sGlow" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stop-color="#91c612" stop-opacity="0.09"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+          </defs>
+          <ellipse cx="280" cy="400" rx="200" ry="17" fill="rgba(0,0,0,.6)"/>
+          <rect x="60" y="310" width="440" height="14" rx="4" fill="url(#bG)" stroke="rgba(145,198,18,.15)" stroke-width="1"/>
+          <rect x="60" y="260" width="440" height="54" rx="4" fill="url(#kG)" stroke="rgba(145,198,18,.1)" stroke-width="1"/>
+          <g fill="#0d1c2c" stroke="rgba(145,198,18,.1)" stroke-width=".5">
+            <rect x="78" y="268" width="22" height="12" rx="2"/>
+            <rect x="104" y="268" width="22" height="12" rx="2"/>
+            <rect x="130" y="268" width="22" height="12" rx="2"/>
+            <rect x="156" y="268" width="22" height="12" rx="2"/>
+            <rect x="182" y="268" width="22" height="12" rx="2"/>
+            <rect x="208" y="268" width="22" height="12" rx="2"/>
+            <rect x="234" y="268" width="22" height="12" rx="2"/>
+            <rect x="260" y="268" width="22" height="12" rx="2"/>
+            <rect x="286" y="268" width="22" height="12" rx="2"/>
+            <rect x="312" y="268" width="22" height="12" rx="2"/>
+            <rect x="338" y="268" width="22" height="12" rx="2"/>
+            <rect x="364" y="268" width="22" height="12" rx="2"/>
+            <rect x="390" y="268" width="22" height="12" rx="2"/>
+            <rect x="416" y="268" width="24" height="12" rx="2" fill="rgba(145,198,18,.1)"/>
+          </g>
+          <g fill="#0d1c2c" stroke="rgba(145,198,18,.1)" stroke-width=".5">
+            <rect x="78" y="284" width="30" height="12" rx="2"/>
+            <rect x="112" y="284" width="22" height="12" rx="2"/>
+            <rect x="138" y="284" width="22" height="12" rx="2"/>
+            <rect x="164" y="284" width="22" height="12" rx="2"/>
+            <rect x="190" y="284" width="22" height="12" rx="2"/>
+            <rect x="216" y="284" width="22" height="12" rx="2"/>
+            <rect x="242" y="284" width="22" height="12" rx="2"/>
+            <rect x="268" y="284" width="22" height="12" rx="2"/>
+            <rect x="294" y="284" width="22" height="12" rx="2"/>
+            <rect x="320" y="284" width="22" height="12" rx="2"/>
+            <rect x="346" y="284" width="22" height="12" rx="2"/>
+            <rect x="372" y="284" width="22" height="12" rx="2"/>
+            <rect x="398" y="284" width="42" height="12" rx="2"/>
+          </g>
+          <rect x="148" y="300" width="230" height="12" rx="2" fill="#0d1c2c" stroke="rgba(145,198,18,.15)" stroke-width=".5"/>
+          <rect x="230" y="318" width="100" height="4" rx="2" fill="rgba(145,198,18,.08)" stroke="rgba(145,198,18,.12)" stroke-width=".5"/>
+          <!-- Lid -->
+          <rect x="70" y="30" width="420" height="240" rx="10" fill="url(#bG)" stroke="rgba(145,198,18,.22)" stroke-width="1.5"/>
+          <rect x="80" y="40" width="400" height="220" rx="8" fill="#000510"/>
+          <rect x="85" y="45" width="390" height="210" rx="6" fill="url(#sG)"/>
+          <rect x="85" y="45" width="390" height="210" rx="6" fill="url(#sGlow)"/>
+          <!-- Header bar -->
+          <rect x="85" y="45" width="390" height="26" rx="6" fill="rgba(5,15,30,.9)"/>
+          <circle cx="100" cy="58" r="4" fill="rgba(145,198,18,.15)"/>
+          <rect x="108" y="54" width="60" height="8" rx="3" fill="rgba(145,198,18,.12)"/>
+          <rect x="380" y="52" width="40" height="10" rx="4" fill="rgba(145,198,18,.25)"/>
+          <rect x="340" y="54" width="35" height="6" rx="2" fill="rgba(211,211,211,.08)"/>
+          <!-- Chart -->
+          <rect x="92" y="78" width="170" height="90" rx="6" fill="rgba(145,198,18,.04)" stroke="rgba(145,198,18,.12)" stroke-width="1"/>
+          <rect x="96" y="82" width="80" height="6" rx="2" fill="rgba(145,198,18,.3)"/>
+          <rect x="96" y="92" width="50" height="5" rx="2" fill="rgba(211,211,211,.1)"/>
+          <rect x="96" y="130" width="12" height="30" rx="2" fill="rgba(145,198,18,.5)"/>
+          <rect x="112" y="120" width="12" height="40" rx="2" fill="rgba(145,198,18,.7)"/>
+          <rect x="128" y="110" width="12" height="50" rx="2" fill="rgba(145,198,18,.9)"/>
+          <rect x="144" y="125" width="12" height="35" rx="2" fill="rgba(145,198,18,.6)"/>
+          <rect x="160" y="115" width="12" height="45" rx="2" fill="rgba(145,198,18,.8)"/>
+          <rect x="176" y="105" width="12" height="55" rx="2" fill="#91c612"/>
+          <rect x="192" y="118" width="12" height="42" rx="2" fill="rgba(145,198,18,.65)"/>
+          <rect x="208" y="128" width="12" height="32" rx="2" fill="rgba(145,198,18,.5)"/>
+          <rect x="224" y="108" width="12" height="52" rx="2" fill="rgba(145,198,18,.75)"/>
+          <rect x="270" y="78" width="80" height="40" rx="6" fill="rgba(145,198,18,.06)" stroke="rgba(145,198,18,.12)" stroke-width="1"/>
+          <rect x="278" y="85" width="40" height="5" rx="2" fill="rgba(145,198,18,.25)"/>
+          <text x="282" y="106" font-size="9" fill="#91c612" font-family="Oxanium,sans-serif" font-weight="700">98%</text>
+          <rect x="356" y="78" width="110" height="40" rx="6" fill="rgba(0,100,255,.06)" stroke="rgba(0,100,255,.12)" stroke-width="1"/>
+          <rect x="364" y="86" width="55" height="5" rx="2" fill="rgba(100,180,255,.2)"/>
+          <rect x="364" y="96" width="85" height="4" rx="2" fill="rgba(100,180,255,.12)"/>
+          <rect x="364" y="104" width="65" height="4" rx="2" fill="rgba(100,180,255,.08)"/>
+          <!-- Bottom bar -->
+          <rect x="85" y="225" width="390" height="30" rx="4" fill="rgba(5,10,20,.8)"/>
+          <circle cx="96" cy="240" r="4" fill="rgba(145,198,18,.4)"/>
+          <rect x="104" y="236" width="60" height="6" rx="2" fill="rgba(145,198,18,.15)"/>
+          <line x1="85" y1="71" x2="475" y2="71" stroke="rgba(145,198,18,.15)" stroke-width="1"/>
+          <rect x="80" y="40" width="400" height="220" rx="8" fill="none" stroke="rgba(145,198,18,.18)" stroke-width="1"/>
+          <rect x="120" y="258" width="320" height="5" rx="2" fill="#0a1520" stroke="rgba(145,198,18,.08)" stroke-width=".5"/>
+        </svg>
+      </div>
+
+      <div class="burbuja burbuja-1">
+        <div class="burbuja-icono"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <div class="burbuja-texto"><strong>Ultra Rendimiento</strong><span>Intel Core Ultra 9</span></div>
+      </div>
+      <div class="burbuja burbuja-2">
+        <div class="burbuja-icono"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></div>
+        <div class="burbuja-texto"><strong>Pantalla 4K OLED</strong><span>120Hz Adaptativo</span></div>
+      </div>
+      <div class="burbuja burbuja-3">
+        <div class="burbuja-icono"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="burbuja-texto"><strong>Grado Militar</strong><span>MIL-STD-810H</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TICKER ═══ -->
+<div class="ticker">
+  <div class="ticker-pista">
+    <span class="ticker-item">ENVÍO GRATIS EN PEDIDOS MAYORES A $99 <span class="ticker-punto">◆</span></span>
+    <span class="ticker-item">NUEVO: SERIE SDX QUANTUM PRO YA DISPONIBLE <span class="ticker-punto">◆</span></span>
+    <span class="ticker-item">SOLUCIONES EMPRESARIALES AHORA DISPONIBLES <span class="ticker-punto">◆</span></span>
+    <span class="ticker-item">SOPORTE TÉCNICO EXPERTO 24/7 <span class="ticker-punto">◆</span></span>
+    <span class="ticker-item">DEVOLUCIONES GRATUITAS POR 30 DÍAS <span class="ticker-punto">◆</span></span>
+    <span class="ticker-item">ENVÍO GRATIS EN PEDIDOS MAYORES A $99 <span class="ticker-punto">◆</span></span>
+    <span class="ticker-item">NUEVO: SERIE SDX QUANTUM PRO YA DISPONIBLE <span class="ticker-punto">◆</span></span>
+    <span class="ticker-item">SOLUCIONES EMPRESARIALES AHORA DISPONIBLES <span class="ticker-punto">◆</span></span>
+    <span class="ticker-item">SOPORTE TÉCNICO EXPERTO 24/7 <span class="ticker-punto">◆</span></span>
+    <span class="ticker-item">DEVOLUCIONES GRATUITAS POR 30 DÍAS <span class="ticker-punto">◆</span></span>
+  </div>
+</div>
+
+<!-- ═══ CATEGORÍAS ═══ -->
+<section class="categorias" id="categorias">
+  <div class="encabezado">
+    <div class="sec-tag">Explorar por Categoría</div>
+    <h2 class="sec-titulo">Descubrí Nuestra Línea</h2>
+    <p class="sec-sub">Desde servidores empresariales hasta periféricos cotidianos — encontrá la tecnología correcta para cada necesidad.</p>
+  </div>
+  <div class="cat-grid">
+    <a href="#" class="cat-card">
+      <div class="cat-icono"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></div>
+      <span class="cat-nombre">Laptops</span><span class="cat-total">248 Productos</span>
+    </a>
+    <a href="#" class="cat-card">
+      <div class="cat-icono"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M8 21h8m-4-4v4"/></svg></div>
+      <span class="cat-nombre">Monitores</span><span class="cat-total">136 Productos</span>
+    </a>
+    <a href="#" class="cat-card">
+      <div class="cat-icono"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg></div>
+      <span class="cat-nombre">Redes & Wi-Fi</span><span class="cat-total">94 Productos</span>
+    </a>
+    <a href="#" class="cat-card">
+      <div class="cat-icono"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+      <span class="cat-nombre">Periféricos</span><span class="cat-total">312 Productos</span>
+    </a>
+    <a href="#" class="cat-card">
+      <div class="cat-icono"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+      <span class="cat-nombre">Hogar Inteligente</span><span class="cat-total">187 Productos</span>
+    </a>
+    <a href="#" class="cat-card">
+      <div class="cat-icono"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <span class="cat-nombre">Seguridad IT</span><span class="cat-total">215 Productos</span>
+    </a>
+    <a href="#" class="cat-card">
+      <div class="cat-icono"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/></svg></div>
+      <span class="cat-nombre">Accesorios</span><span class="cat-total">540 Productos</span>
+    </a>
+    <a href="#" class="cat-card">
+      <div class="cat-icono"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+      <span class="cat-nombre">Oficina Tech</span><span class="cat-total">173 Productos</span>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ PRODUCTOS ═══ -->
+<section class="productos" id="productos">
+  <div class="encabezado">
+    <div class="sec-tag">Lo Más Destacado</div>
+    <h2 class="sec-titulo">Más Vendidos y Novedades</h2>
+    <p class="sec-sub">Seleccionados por nuestros expertos — la tecnología de la que todos hablan.</p>
+  </div>
+  <div class="prod-tabs">
+    <button class="tab activo">Todos</button>
+    <button class="tab">Laptops</button>
+    <button class="tab">Monitores</button>
+    <button class="tab">Redes</button>
+    <button class="tab">Periféricos</button>
+    <button class="tab">Hogar Int.</button>
+    <button class="tab">Seguridad</button>
+  </div>
+  <div class="prod-grid">
+
+    <!-- 1 Laptop -->
+    <div class="prod-card">
+      <span class="prod-badge badge-nuevo">Nuevo</span>
+      <button class="prod-deseo" title="Lista de deseos"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <div class="prod-img">
+        <svg viewBox="0 0 160 130" style="width:155px;height:125px" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="l1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1a2535"/><stop offset="100%" stop-color="#0d1a28"/></linearGradient></defs>
+          <rect x="10" y="10" width="140" height="88" rx="6" fill="url(#l1)" stroke="rgba(145,198,18,.2)" stroke-width="1"/>
+          <rect x="14" y="14" width="132" height="80" rx="4" fill="#000c1a"/>
+          <rect x="18" y="18" width="55" height="36" rx="3" fill="rgba(145,198,18,.06)" stroke="rgba(145,198,18,.12)" stroke-width=".5"/>
+          <rect x="22" y="22" width="30" height="4" rx="1" fill="rgba(145,198,18,.3)"/>
+          <rect x="22" y="30" width="45" height="3" rx="1" fill="rgba(145,198,18,.5)"/>
+          <rect x="80" y="18" width="62" height="36" rx="3" fill="rgba(0,80,200,.06)" stroke="rgba(0,100,255,.1)" stroke-width=".5"/>
+          <rect x="18" y="62" width="124" height="28" rx="3" fill="rgba(5,12,25,.6)"/>
+          <rect x="22" y="66" width="40" height="3" rx="1" fill="rgba(145,198,18,.2)"/>
+          <rect x="22" y="72" width="115" height="2" rx="1" fill="rgba(100,120,150,.15)"/>
+          <rect x="22" y="78" width="90" height="2" rx="1" fill="rgba(100,120,150,.1)"/>
+          <rect x="5" y="98" width="150" height="8" rx="2" fill="url(#l1)" stroke="rgba(145,198,18,.15)" stroke-width="1"/>
+          <rect x="55" y="106" width="50" height="18" rx="2" fill="rgba(0,5,15,.7)"/>
+          <ellipse cx="80" cy="124" rx="50" ry="4" fill="rgba(0,0,0,.4)"/>
+        </svg>
+      </div>
+      <div class="prod-info">
+        <div class="prod-marca">SDX</div>
+        <div class="prod-nombre">ProBook X15 Ultra — Core i9 / RTX 4070</div>
+        <div class="prod-specs">Intel Core i9-14900H · 32GB DDR5 · 1TB NVMe · 15,6" 2K 165Hz</div>
+        <div class="prod-rating"><span class="estrellas">★★★★★</span><span class="num-resenas">(1.284)</span></div>
+        <div class="prod-pie">
+          <div class="prod-precio"><span class="actual">$1.899</span><span class="anterior">$2.199</span></div>
+          <button class="btn-carrito"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 Monitor -->
+    <div class="prod-card">
+      <span class="prod-badge badge-top">Más Vendido</span>
+      <button class="prod-deseo" title="Lista de deseos"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <div class="prod-img">
+        <svg viewBox="0 0 160 130" style="width:155px;height:125px" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="m2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1a2535"/><stop offset="100%" stop-color="#0d1a28"/></linearGradient><linearGradient id="sky" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#001830"/><stop offset="100%" stop-color="#001020"/></linearGradient></defs>
+          <rect x="68" y="96" width="24" height="22" rx="2" fill="url(#m2)"/>
+          <rect x="52" y="116" width="56" height="8" rx="3" fill="url(#m2)" stroke="rgba(145,198,18,.15)" stroke-width="1"/>
+          <rect x="8" y="8" width="144" height="92" rx="8" fill="url(#m2)" stroke="rgba(145,198,18,.25)" stroke-width="1.5"/>
+          <rect x="13" y="13" width="134" height="82" rx="5" fill="url(#sky)"/>
+          <rect x="16" y="16" width="128" height="14" rx="3" fill="rgba(5,15,30,.9)"/>
+          <rect x="118" y="19" width="22" height="7" rx="3" fill="rgba(145,198,18,.25)"/>
+          <polyline points="16,78 30,58 50,65 70,40 90,55 110,35 128,45 141,30 141,78" fill="rgba(145,198,18,.08)" stroke="#91c612" stroke-width="1.5"/>
+          <line x1="16" y1="78" x2="141" y2="78" stroke="rgba(145,198,18,.15)" stroke-width=".5"/>
+          <circle cx="136" cy="88" r="3" fill="rgba(145,198,18,.5)"/>
+          <ellipse cx="80" cy="128" rx="60" ry="5" fill="rgba(0,0,0,.35)"/>
+        </svg>
+      </div>
+      <div class="prod-info">
+        <div class="prod-marca">SDX</div>
+        <div class="prod-nombre">VistaEdge 32" Monitor 4K OLED</div>
+        <div class="prod-specs">3840×2160 · 144Hz · 0,1ms · USB-C 90W · HDR10+ · Antirreflejo</div>
+        <div class="prod-rating"><span class="estrellas">★★★★★</span><span class="num-resenas">(3.041)</span></div>
+        <div class="prod-pie">
+          <div class="prod-precio"><span class="actual">$1.249</span><span class="anterior">$1.499</span></div>
+          <button class="btn-carrito"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 Router -->
+    <div class="prod-card">
+      <span class="prod-badge badge-oferta">Oferta Limitada</span>
+      <button class="prod-deseo" title="Lista de deseos"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <div class="prod-img">
+        <svg viewBox="0 0 160 130" style="width:155px;height:125px" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="r3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1a2535"/><stop offset="100%" stop-color="#0a1520"/></linearGradient></defs>
+          <rect x="20" y="50" width="120" height="42" rx="8" fill="url(#r3)" stroke="rgba(145,198,18,.25)" stroke-width="1.5"/>
+          <rect x="40" y="20" width="5" height="34" rx="2" fill="url(#r3)" stroke="rgba(145,198,18,.2)" stroke-width="1"/>
+          <rect x="77" y="14" width="5" height="40" rx="2" fill="url(#r3)" stroke="rgba(145,198,18,.25)" stroke-width="1"/>
+          <rect x="114" y="22" width="5" height="32" rx="2" fill="url(#r3)" stroke="rgba(145,198,18,.2)" stroke-width="1"/>
+          <circle cx="42" cy="20" r="4" fill="rgba(145,198,18,.3)" stroke="rgba(145,198,18,.4)" stroke-width="1"/>
+          <circle cx="79" cy="14" r="4" fill="rgba(145,198,18,.55)" stroke="#91c612" stroke-width="1"/>
+          <circle cx="116" cy="22" r="4" fill="rgba(145,198,18,.3)" stroke="rgba(145,198,18,.4)" stroke-width="1"/>
+          <circle cx="34" cy="65" r="4" fill="#91c612" opacity=".9"/>
+          <circle cx="48" cy="65" r="4" fill="#91c612" opacity=".7"/>
+          <circle cx="62" cy="65" r="4" fill="rgba(145,198,18,.25)"/>
+          <text x="90" y="74" font-size="11" fill="rgba(145,198,18,.35)" font-family="Oxanium,sans-serif" font-weight="800">SDX</text>
+          <rect x="22" y="82" width="8" height="6" rx="1" fill="rgba(0,5,15,.9)" stroke="rgba(145,198,18,.2)" stroke-width=".5"/>
+          <rect x="34" y="82" width="8" height="6" rx="1" fill="rgba(0,5,15,.9)" stroke="rgba(145,198,18,.2)" stroke-width=".5"/>
+          <rect x="46" y="82" width="8" height="6" rx="1" fill="rgba(0,5,15,.9)" stroke="rgba(145,198,18,.2)" stroke-width=".5"/>
+          <rect x="58" y="82" width="8" height="6" rx="1" fill="rgba(0,5,15,.9)" stroke="rgba(145,198,18,.2)" stroke-width=".5"/>
+          <path d="M100 92 Q110 82 120 92" stroke="rgba(145,198,18,.3)" stroke-width="1.5" fill="none"/>
+          <path d="M96 96 Q110 78 124 96" stroke="rgba(145,198,18,.2)" stroke-width="1.5" fill="none"/>
+          <ellipse cx="80" cy="100" rx="70" ry="6" fill="rgba(0,0,0,.35)"/>
+        </svg>
+      </div>
+      <div class="prod-info">
+        <div class="prod-marca">SDX</div>
+        <div class="prod-nombre">NexLink AX7200 Router Tri-Band Wi-Fi 6E</div>
+        <div class="prod-specs">7200Mbps · Banda 6GHz · 160MHz · MU-MIMO · 8×LAN · WPA3</div>
+        <div class="prod-rating"><span class="estrellas">★★★★★</span><span class="num-resenas">(892)</span></div>
+        <div class="prod-pie">
+          <div class="prod-precio"><span class="actual">$399</span><span class="anterior">$549</span></div>
+          <button class="btn-carrito"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 Cámara -->
+    <div class="prod-card">
+      <span class="prod-badge badge-nuevo">Nuevo</span>
+      <button class="prod-deseo" title="Lista de deseos"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <div class="prod-img">
+        <svg viewBox="0 0 160 130" style="width:155px;height:125px" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="c4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1a2535"/><stop offset="100%" stop-color="#0a1520"/></linearGradient></defs>
+          <rect x="35" y="30" width="90" height="55" rx="12" fill="url(#c4)" stroke="rgba(145,198,18,.25)" stroke-width="1.5"/>
+          <circle cx="80" cy="57" r="22" fill="#000812" stroke="rgba(145,198,18,.3)" stroke-width="1.5"/>
+          <circle cx="80" cy="57" r="17" fill="#000509" stroke="rgba(145,198,18,.2)" stroke-width="1"/>
+          <circle cx="80" cy="57" r="11" fill="#010d1c" stroke="rgba(145,198,18,.15)" stroke-width="1"/>
+          <circle cx="80" cy="57" r="5" fill="#91c612" opacity=".7"/>
+          <circle cx="77" cy="54" r="2" fill="rgba(255,255,255,.25)"/>
+          <circle cx="46" cy="42" r="3.5" fill="rgba(145,198,18,.2)"/>
+          <circle cx="113" cy="42" r="3.5" fill="rgba(145,198,18,.2)"/>
+          <circle cx="60" cy="80" r="3" fill="#91c612"/>
+          <rect x="68" y="82" width="24" height="12" rx="3" fill="url(#c4)"/>
+          <rect x="56" y="94" width="48" height="8" rx="4" fill="url(#c4)" stroke="rgba(145,198,18,.15)" stroke-width="1"/>
+          <ellipse cx="80" cy="108" rx="50" ry="5" fill="rgba(0,0,0,.35)"/>
+        </svg>
+      </div>
+      <div class="prod-info">
+        <div class="prod-marca">SDX</div>
+        <div class="prod-nombre">ShieldCam Pro Cámara IA 4K</div>
+        <div class="prod-specs">4K UHD · IA Detección · Visión Nocturna 40m · IP67 · Audio Bidireccional · PoE</div>
+        <div class="prod-rating"><span class="estrellas">★★★★☆</span><span class="num-resenas">(644)</span></div>
+        <div class="prod-pie">
+          <div class="prod-precio"><span class="actual">$249</span></div>
+          <button class="btn-carrito"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 Mouse -->
+    <div class="prod-card">
+      <span class="prod-badge badge-pick">Elección del Editor</span>
+      <button class="prod-deseo" title="Lista de deseos"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <div class="prod-img">
+        <svg viewBox="0 0 160 130" style="width:155px;height:125px" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="ms5" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1a2535"/><stop offset="100%" stop-color="#0a1520"/></linearGradient></defs>
+          <ellipse cx="80" cy="72" rx="36" ry="48" fill="url(#ms5)" stroke="rgba(145,198,18,.25)" stroke-width="1.5"/>
+          <path d="M44 56 Q44 30 80 28 L80 72 Z" fill="rgba(145,198,18,.08)" stroke="rgba(145,198,18,.2)" stroke-width="1"/>
+          <path d="M116 56 Q116 30 80 28 L80 72 Z" fill="rgba(5,15,30,.6)" stroke="rgba(145,198,18,.15)" stroke-width="1"/>
+          <ellipse cx="80" cy="50" rx="7" ry="10" fill="rgba(145,198,18,.15)" stroke="rgba(145,198,18,.35)" stroke-width="1.5"/>
+          <ellipse cx="80" cy="110" rx="30" ry="5" fill="rgba(145,198,18,.15)"/>
+          <rect x="74" y="62" width="12" height="5" rx="2" fill="rgba(145,198,18,.2)"/>
+          <rect x="44" y="68" width="6" height="12" rx="2" fill="rgba(145,198,18,.15)" stroke="rgba(145,198,18,.2)" stroke-width=".5"/>
+          <rect x="44" y="82" width="6" height="12" rx="2" fill="rgba(145,198,18,.1)" stroke="rgba(145,198,18,.15)" stroke-width=".5"/>
+          <text x="68" y="90" font-size="8" fill="rgba(145,198,18,.25)" font-family="Oxanium,sans-serif" font-weight="800">SDX</text>
+          <ellipse cx="80" cy="120" rx="40" ry="5" fill="rgba(0,0,0,.4)"/>
+        </svg>
+      </div>
+      <div class="prod-info">
+        <div class="prod-marca">SDX</div>
+        <div class="prod-nombre">VortexGrip Pro Mouse Gaming Inalámbrico</div>
+        <div class="prod-specs">26K DPI · Óptico · 72hs Batería · RGB · 7 Botones · Ultra-ligero 68g</div>
+        <div class="prod-rating"><span class="estrellas">★★★★★</span><span class="num-resenas">(2.108)</span></div>
+        <div class="prod-pie">
+          <div class="prod-precio"><span class="actual">$129</span><span class="anterior">$159</span></div>
+          <button class="btn-carrito"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 Hub -->
+    <div class="prod-card">
+      <span class="prod-badge badge-top">Más Vendido</span>
+      <button class="prod-deseo" title="Lista de deseos"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <div class="prod-img">
+        <svg viewBox="0 0 160 130" style="width:155px;height:125px" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="h6" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1a2535"/><stop offset="100%" stop-color="#0a1520"/></linearGradient></defs>
+          <rect x="20" y="42" width="120" height="50" rx="10" fill="url(#h6)" stroke="rgba(145,198,18,.25)" stroke-width="1.5"/>
+          <rect x="28" y="50" width="14" height="10" rx="2" fill="rgba(0,5,15,.9)" stroke="rgba(145,198,18,.2)" stroke-width=".5"/>
+          <rect x="48" y="50" width="14" height="10" rx="2" fill="rgba(0,5,15,.9)" stroke="rgba(145,198,18,.2)" stroke-width=".5"/>
+          <rect x="68" y="50" width="14" height="10" rx="2" fill="rgba(0,5,15,.9)" stroke="rgba(145,198,18,.2)" stroke-width=".5"/>
+          <rect x="88" y="50" width="14" height="10" rx="2" fill="rgba(0,5,15,.9)" stroke="rgba(145,198,18,.2)" stroke-width=".5"/>
+          <rect x="108" y="50" width="14" height="10" rx="2" fill="rgba(0,5,15,.9)" stroke="rgba(145,198,18,.3)" stroke-width=".5"/>
+          <circle cx="35" cy="67" r="3" fill="#91c612" opacity=".9"/>
+          <circle cx="55" cy="67" r="3" fill="#91c612" opacity=".7"/>
+          <circle cx="75" cy="67" r="3" fill="rgba(145,198,18,.3)"/>
+          <circle cx="95" cy="67" r="3" fill="rgba(145,198,18,.3)"/>
+          <rect x="28" y="76" width="18" height="11" rx="3" fill="rgba(0,5,15,.9)" stroke="rgba(145,198,18,.2)" stroke-width=".5"/>
+          <rect x="54" y="76" width="18" height="11" rx="3" fill="rgba(0,5,15,.9)" stroke="rgba(145,198,18,.2)" stroke-width=".5"/>
+          <rect x="80" y="76" width="18" height="11" rx="3" fill="rgba(0,5,15,.9)" stroke="rgba(145,198,18,.35)" stroke-width=".5"/>
+          <text x="106" y="86" font-size="9" fill="rgba(145,198,18,.3)" font-family="Oxanium,sans-serif" font-weight="800">SDX</text>
+          <path d="M20 67 Q5 67 5 80 Q5 92 14 92" stroke="url(#h6)" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <ellipse cx="80" cy="100" rx="65" ry="6" fill="rgba(0,0,0,.3)"/>
+        </svg>
+      </div>
+      <div class="prod-info">
+        <div class="prod-marca">SDX</div>
+        <div class="prod-nombre">PortHub 13 en 1 Docking Station USB-C</div>
+        <div class="prod-specs">100W PD · 4K HDMI×2 · USB-A 10Gbps · SD/microSD · Ethernet Gig</div>
+        <div class="prod-rating"><span class="estrellas">★★★★★</span><span class="num-resenas">(4.522)</span></div>
+        <div class="prod-pie">
+          <div class="prod-precio"><span class="actual">$89</span><span class="anterior">$119</span></div>
+          <button class="btn-carrito"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>Agregar</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ POR QUÉ SDX ═══ -->
+<section class="por-que">
+  <div class="encabezado">
+    <div class="sec-tag">Nuestra Promesa</div>
+    <h2 class="sec-titulo">Por Qué los Profesionales Eligen SDX</h2>
+    <p class="sec-sub">Cada producto, cada interacción, cada entrega — diseñados para superar las expectativas.</p>
+  </div>
+  <div class="pq-grid">
+    <div class="pq-card">
+      <div class="pq-icono"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+      <h3>Tecnología de Vanguardia</h3>
+      <p>Acceso exclusivo a los últimos chipsets, pantallas y estándares de conectividad antes que nadie.</p>
+    </div>
+    <div class="pq-card">
+      <div class="pq-icono"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <h3>Calidad Certificada</h3>
+      <p>Cada producto es sometido a rigurosas pruebas de nivel militar y empresarial antes de ser listado.</p>
+    </div>
+    <div class="pq-card">
+      <div class="pq-icono"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      <h3>Despacho el Mismo Día</h3>
+      <p>Pedí antes de las 15hs y enviamos hoy. Seguí tu paquete en tiempo real desde el depósito hasta tu puerta.</p>
+    </div>
+    <div class="pq-card">
+      <div class="pq-icono"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+      <h3>Soporte Experto 24/7</h3>
+      <p>Ingenieros reales disponibles en todo momento. Respuestas técnicas reales, no scripts de chatbot.</p>
+    </div>
+    <div class="pq-card">
+      <div class="pq-icono"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+      <h3>Pagos 100% Seguros</h3>
+      <p>Cifrado SSL de 256 bits, certificado PCI-DSS. Tus transacciones siempre protegidas de extremo a extremo.</p>
+    </div>
+    <div class="pq-card">
+      <div class="pq-icono"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+      <h3>Financiación Empresarial</h3>
+      <p>Planes en cuotas sin interés y facturación corporativa para equipos y organizaciones de todos los tamaños.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ BANNER PROMO ═══ -->
+<section class="banner-promo">
+  <div class="banner-inner">
+    <div>
+      <span class="banner-tag">Sale de Primavera 2026</span>
+      <h2 class="banner-titulo">Hasta <em>40% Off</em><br>Hardware Profesional</h2>
+      <p class="banner-sub">Solo por tiempo limitado — ahorrá en laptops, monitores, equipos de red y dispositivos inteligentes seleccionados para profesionales y power users.</p>
+      <div class="banner-ctas">
+        <a href="#" class="btn-primario">Ver Ofertas<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="#" class="btn-contorno">Todos los Deals</a>
+      </div>
+    </div>
+    <div class="cuenta-regresiva">
+      <div class="cr-bloque"><strong id="cr-hs">07</strong><small>Horas</small></div>
+      <span class="cr-sep">:</span>
+      <div class="cr-bloque"><strong id="cr-mn">24</strong><small>Mins</small></div>
+      <span class="cr-sep">:</span>
+      <div class="cr-bloque"><strong id="cr-sg">38</strong><small>Segs</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIOS ═══ -->
+<section class="testimonios">
+  <div class="encabezado">
+    <div class="sec-tag">Historias de Clientes</div>
+    <h2 class="sec-titulo">La Confianza de +50.000 Profesionales</h2>
+    <p class="sec-sub">Desde freelancers hasta equipos IT de grandes empresas — mirá qué dicen nuestros clientes.</p>
+  </div>
+  <div class="sellos">
+    <div class="sello"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Compra Verificada</div>
+    <div class="sello"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Devolución 30 Días</div>
+    <div class="sello"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Soporte 24/7</div>
+    <div class="sello"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>Envío Express</div>
+    <div class="sello"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Calificación 4,9/5</div>
+  </div>
+  <div class="resenas-grid">
+    <div class="resena-card">
+      <div class="resena-header">
+        <div class="reseniador">
+          <div class="avatar" style="background:linear-gradient(135deg,#91c612,#5a8c0a)">JM</div>
+          <div><div class="res-nombre">Javier Moreno</div><div class="res-cargo">Ing. Senior DevOps</div></div>
+        </div>
+        <div class="estrellas">★★★★★</div>
+      </div>
+      <p class="res-texto">El ProBook X15 Ultra es una bestia. Compila todo nuestro código base en menos de 90 segundos. La calidad de construcción está a años luz de todo lo que usé antes — y el soporte técnico realmente sabe de lo que habla.</p>
+      <div class="res-producto">✓ Compra Verificada · ProBook X15 Ultra</div>
+    </div>
+    <div class="resena-card">
+      <div class="resena-header">
+        <div class="reseniador">
+          <div class="avatar" style="background:linear-gradient(135deg,#3a8eff,#1a5ec0)">SR</div>
+          <div><div class="res-nombre">Sofía Reyes</div><div class="res-cargo">Directora Creativa</div></div>
+        </div>
+        <div class="estrellas">★★★★★</div>
+      </div>
+      <p class="res-texto">El monitor OLED VistaEdge transformó completamente mi flujo de corrección de color. Los negros son negros de verdad, los colores son increíblemente precisos. Llegó al día siguiente, empacado perfecto. No voy a comprar tecnología en otro lado.</p>
+      <div class="res-producto">✓ Compra Verificada · VistaEdge 32" OLED</div>
+    </div>
+    <div class="resena-card">
+      <div class="resena-header">
+        <div class="reseniador">
+          <div class="avatar" style="background:linear-gradient(135deg,#ff6b35,#c0391a)">AK</div>
+          <div><div class="res-nombre">Ariel Kessler</div><div class="res-cargo">Gerente IT, Finanzas</div></div>
+        </div>
+        <div class="estrellas">★★★★★</div>
+      </div>
+      <p class="res-texto">Desplegamos 40 unidades del NexLink AX7200 en todas nuestras oficinas. Cero caídas en 6 meses de uso intensivo. El WPA3 y el software de gestión son de nivel empresarial. SDX se convirtió en nuestro proveedor principal de networking.</p>
+      <div class="res-producto">✓ Compra Verificada · NexLink AX7200</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ NEWSLETTER ═══ -->
+<section class="newsletter">
+  <div class="nl-inner">
+    <div class="sec-tag" style="display:block;text-align:center">Mantente Informado</div>
+    <h2 class="nl-titulo">Acceso Anticipado a Lanzamientos<br>y Ofertas Exclusivas</h2>
+    <p class="nl-sub">Unite a más de 80.000 profesionales tech. Sé el primero en conocer nuevos productos, descuentos exclusivos y guías de expertos.</p>
+    <div class="nl-form">
+      <input class="nl-input" type="email" placeholder="tu@email.com">
+      <button class="btn-primario">Suscribirme<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    </div>
+    <p class="nl-nota">Sin spam. Cancelá cuando quieras. Respetamos tu privacidad.</p>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-marca">
+      <div class="logo-wrap">
+        <svg viewBox="0 0 302.04 141.39" xmlns="http://www.w3.org/2000/svg" aria-label="SDX">
+          <defs><style>.fc1{fill:#91c612}.fc2{fill:#efefef}</style></defs>
+          <g>
+            <path class="fc2" d="M154.69,69.11c0,1.86-.24,3.54-.71,5.02-.47,1.49-1.09,2.8-1.87,3.94-.77,1.14-1.68,2.1-2.72,2.9-1.04.8-2.12,1.45-3.23,1.96-1.11.51-2.24.88-3.39,1.12-1.15.24-2.23.36-3.25.36h-36.39v-9.43h36.39c1.81,0,3.22-.53,4.23-1.6,1-1.06,1.51-2.49,1.51-4.28,0-.87-.13-1.67-.4-2.39-.27-.73-.65-1.35-1.14-1.89-.5-.53-1.1-.94-1.81-1.23-.71-.29-1.51-.44-2.38-.44h-21.69c-1.52,0-3.17-.27-4.93-.82-1.77-.54-3.4-1.42-4.92-2.63-1.51-1.21-2.77-2.79-3.77-4.75-1-1.96-1.51-4.35-1.51-7.18s.5-5.22,1.51-7.16c1-1.95,2.26-3.53,3.77-4.75,1.51-1.22,3.15-2.1,4.92-2.65,1.77-.54,3.41-.82,4.93-.82h32.11v9.43h-32.11c-1.79,0-3.19.54-4.19,1.63-1,1.09-1.51,2.53-1.51,4.32s.5,3.25,1.51,4.3,2.4,1.58,4.19,1.58h21.77c1.02.02,2.09.16,3.23.42,1.14.25,2.27.65,3.39,1.18,1.12.53,2.19,1.2,3.21,2.01,1.02.81,1.92,1.78,2.7,2.92.79,1.14,1.41,2.44,1.87,3.92.46,1.48.69,3.14.69,5.01Z"/>
+            <path class="fc2" d="M214.44,62.65c0,3.17-.55,6.08-1.65,8.74-1.1,2.66-2.62,4.95-4.55,6.87-1.94,1.92-4.23,3.43-6.89,4.52-2.66,1.09-5.55,1.63-8.67,1.63h-25.47c-.68,0-1.31-.12-1.89-.36-.58-.24-1.08-.57-1.51-1-.42-.42-.76-.92-1-1.51-.24-.58-.36-1.21-.36-1.89v-42.52c0-.65.12-1.27.36-1.85.24-.58.57-1.09,1-1.52.42-.44.93-.77,1.51-1.02.58-.24,1.21-.36,1.89-.36h25.47c3.12,0,6.01.54,8.67,1.63,2.66,1.09,4.96,2.59,6.89,4.52,1.93,1.92,3.45,4.22,4.55,6.89,1.1,2.67,1.65,5.58,1.65,8.73v8.49ZM205.01,54.16c0-1.84-.3-3.52-.89-5.04s-1.43-2.82-2.52-3.9c-1.09-1.08-2.39-1.91-3.9-2.5-1.51-.59-3.19-.89-5.02-.89h-20.79v33.16h20.79c1.84,0,3.51-.3,5.02-.89,1.51-.59,2.81-1.43,3.9-2.5,1.09-1.08,1.93-2.37,2.52-3.88.59-1.51.89-3.2.89-5.06v-8.49Z"/>
+            <path class="fc2" d="M246.01,50.97l15.89-18.57h12.88l-22.38,26.08,22.24,25.94h-12.81l-15.82-18.43-15.74,18.43h-12.84l22.2-25.94-22.27-26.08h12.77l15.89,18.57Z"/>
+          </g>
+          <polygon class="fc1" points="76.02 70.77 76.01 70.78 68.87 66.66 51.68 66.66 51.68 69.06 62.36 75.22 67.08 77.95 67.1 77.95 75.41 82.74 65.34 88.55 54.72 82.42 54.72 94.75 65.34 100.88 86.08 88.91 91.42 85.83 91.42 79.66 80.74 73.5 76.02 70.77"/>
+          <polygon class="fc1" points="36.15 89.24 36.15 89.23 42.89 84.51 50.15 68.93 47.98 67.91 37.88 74.99 33.41 78.12 33.41 78.13 25.55 83.64 24.54 72.06 34.58 65.02 23.41 59.82 13.36 66.86 15.46 90.71 16 96.85 21.58 99.45 31.68 92.38 36.15 89.24"/>
+          <polygon class="fc1" points="35.23 45.69 35.24 45.69 37.37 53.65 49.53 65.8 51.22 64.1 48.03 52.2 46.62 46.93 46.61 46.92 44.13 37.65 55.35 40.66 58.53 52.5 67.24 43.79 64.07 31.94 40.94 25.75 34.98 24.15 30.63 28.51 33.82 40.41 35.23 45.69"/>
+        </svg>
+      </div>
+      <p>La tienda de tecnología para profesionales. Hardware premium, asesoramiento experto y servicio sin igual — llevando el futuro tech a tu puerta.</p>
+      <div class="redes">
+        <a href="#" class="red" title="X / Twitter"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+        <a href="#" class="red" title="LinkedIn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        <a href="#" class="red" title="YouTube"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.4 19.54C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></a>
+        <a href="#" class="red" title="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Tienda</h4>
+      <ul>
+        <li><a href="#">Laptops</a></li>
+        <li><a href="#">Monitores</a></li>
+        <li><a href="#">Redes & Wi-Fi</a></li>
+        <li><a href="#">Periféricos</a></li>
+        <li><a href="#">Hogar Inteligente</a></li>
+        <li><a href="#">Seguridad IT</a></li>
+        <li><a href="#">Accesorios</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Soluciones</h4>
+      <ul>
+        <li><a href="#">Para Empresas</a></li>
+        <li><a href="#">IT Corporativo</a></li>
+        <li><a href="#">Educación</a></li>
+        <li><a href="#">Home Office</a></li>
+        <li><a href="#">Gaming</a></li>
+        <li><a href="#">Reacondicionados</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Soporte</h4>
+      <ul>
+        <li><a href="#">Centro de Ayuda</a></li>
+        <li><a href="#">Seguir mi Pedido</a></li>
+        <li><a href="#">Devoluciones</a></li>
+        <li><a href="#">Garantía</a></li>
+        <li><a href="#">Contacto</a></li>
+        <li><a href="#">Guías de Producto</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Empresa</h4>
+      <ul>
+        <li><a href="#">Sobre SDX</a></li>
+        <li><a href="#">Empleos</a></li>
+        <li><a href="#">Prensa</a></li>
+        <li><a href="#">Partners</a></li>
+        <li><a href="#">Privacidad</a></li>
+        <li><a href="#">Términos y Condiciones</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 SDX Tienda de Tecnología. Todos los derechos reservados. Construido para los innovadores.</p>
+    <div class="pagos">
+      <span class="pago">VISA</span>
+      <span class="pago">MC</span>
+      <span class="pago">AMEX</span>
+      <span class="pago">MERCADOPAGO</span>
+      <span class="pago">CRIPTO</span>
+      <span class="pago">🔒 SSL</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Tabs
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('activo'));
+      btn.classList.add('activo');
+    });
+  });
+
+  // Cuenta regresiva
+  function actualizarCR() {
+    const ahora = new Date();
+    const h = 7 - (ahora.getHours() % 8);
+    const m = 59 - ahora.getMinutes();
+    const s = 59 - ahora.getSeconds();
+    const pad = n => String(Math.abs(n)).padStart(2,'0');
+    const eh = document.getElementById('cr-hs');
+    const em = document.getElementById('cr-mn');
+    const es = document.getElementById('cr-sg');
+    if(eh) eh.textContent = pad(h < 0 ? h+8 : h);
+    if(em) em.textContent = pad(m);
+    if(es) es.textContent = pad(s);
+  }
+  actualizarCR();
+  setInterval(actualizarCR, 1000);
+
+  // Deseos
+  document.querySelectorAll('.prod-deseo').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const activo = btn.style.color === 'rgb(255, 74, 74)';
+      btn.style.color = activo ? '' : '#ff4a4a';
+      btn.style.borderColor = activo ? '' : '#ff4a4a';
+    });
+  });
+
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.cat-card, .prod-card, .pq-card, .resena-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(22px)';
+    el.style.transition = 'opacity .5s ease, transform .5s ease, border-color .28s, box-shadow .28s';
+    obs.observe(el);
+  });
+</script>
+</body>
+</html>
